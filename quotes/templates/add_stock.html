@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Add stock...</h1>
+<br/>
+	<!-- {{ ticker }} -->
+	<form action="{% url 'add_stock' %}" class="d-flex" method="POST">
+		<!--This token is here as django needs it-->
+		{% csrf_token %}
+		<input class="form-control me-2" type="search" placeholder="Add to portfolio" aria-label="Search" name="ticker">
+		<!--Look at bootstrap button class if u want to change colors-->
+		<button class="btn btn-outline-success" type="submit">Add Stock</button>
+	</form>
+<br/>
+<br/>
+
+<table class="table table-hover table-bordered">
+	<thead class="table-dark">
+		<tr>
+			<th scope="col">Ticker</th>
+			<th scope="col">Price</th>
+			<th scope="col">Previous Close</th>
+			<th scope="col">Market Cap</th>
+			<th scope="col">YTD</th>
+			<th scope="col">52Wk HIGH</th>
+			<th scope="col">52Wk LOW </th>
+			<!-- <th scope="col">Delete</th> -->
+		</tr>
+	</thead>
+<tbody>
+	{% if ticker %}
+		{% for item in output %}
+			<tr>
+				<th scope="row">{{ item.symbol }}</th>
+				<td>${{ item.latestPrice }}</td>
+				<td>${{ item.previousClose }}</td>
+				<td>${{ item.marketCap }}</td>
+				<td>{{ item.ytdChange }} %</td>
+				<td>${{ item.week52High }}</td>
+				<td>${{ item.week52Low }}</td>
+				<!-- <td><a href="/">Delete</a></td> -->
+			</tr>
+		{% endfor %}
+	{% endif %}
+</tbody>
+</table>
+
+	{% for item in ticker %}
+		<a href="{% url 'delete' item.id %}" class="btn btn-secondary">Delete {{ item }}</a> &nbsp;
+	{% endfor %}
+
+<!--
+<br/><br/>
+{% for list_item in output %}
+	{{ list_item.companyName }}<br/>
+	{{ list_item.latestPrice }}<br/>
+	{{ list_item.previousClose }}<br/>
+	{{ list_item.marketCap }}<br/>
+	{{ list_item.ytdChange }}<br/>
+	{{ list_item.week52High }}<br/>
+	{{ list_item.week52Low }}<br/>
+	<br/>
+{% endfor %}
+-->
+
+<!--
+{% for item in ticker %}
+	{{ item }} - <a href="{% url 'delete' item.id %}">Delete stock</a>
+	<br/>
+{% endfor %}
+-->
+{% endblock %}
